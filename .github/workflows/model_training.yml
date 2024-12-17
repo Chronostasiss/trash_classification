@@ -30,14 +30,14 @@ jobs:
     # Step 4: Login to Hugging Face Hub
     - name: Login to Hugging Face Hub
       env:
-        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        HF_TOKEN: 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
       run: |
         huggingface-cli login --token $HF_TOKEN
 
     # Step 5: Set up W&B API Key
     - name: Login to Weights & Biases
       env:
-        WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+        WANDB_API_KEY: 176c2e1e992babf02adcaad6346149b30ea69ae3
       run: |
         wandb login $WANDB_API_KEY
 
