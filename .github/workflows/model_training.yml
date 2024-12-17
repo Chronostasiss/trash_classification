@@ -1,6 +1,5 @@
 name: trash_classification
 
-# Correct event triggers
 on:
   push:
     branches:
