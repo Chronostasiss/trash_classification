@@ -1,9 +1,13 @@
 name: trash_classification
 
+# Correct event triggers
 on:
   push:
     branches:
-      - main  # trigger the pipeline when pushing to the main branch
+      - main  # Trigger the pipeline when pushing to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger on pull requests to the main branch
 
 jobs:
   train-and-publish:
@@ -34,7 +38,7 @@ jobs:
       run: |
         huggingface-cli login --token $HF_TOKEN
 
-    # Step 4.1: Verify Secrets (New Step)
+    # Step 4.1: Verify Secrets
     - name: Verify Secrets
       env:
         WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
