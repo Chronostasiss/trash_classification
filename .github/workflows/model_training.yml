@@ -3,10 +3,8 @@ name: trash_classification
 on:
   push:
     branches:
-      - main  
-  pull_request:
-    branches:
-      - main  # Trigger on pull requests to the main branch
+      - master  # Trigger on push to master branch
+  workflow_dispatch:  # Allow manual trigger from GitHub UI
 
 jobs:
   train-and-publish:
