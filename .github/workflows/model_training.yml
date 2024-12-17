@@ -3,7 +3,7 @@ name: trash_classification
 on:
   push:
     branches:
-      - main  # Trigger the pipeline when pushing to the main branch
+      - main  # trigger the pipeline when pushing to the main branch
 
 jobs:
   train-and-publish:
@@ -18,7 +18,7 @@ jobs:
     - name: Set Up Python
       uses: actions/setup-python@v3
       with:
-        python-version: "3.9"  # Use Python 3.9 or as per your requirements
+        python-version: "3.12.3"
 
     # Step 3: Install Dependencies
     - name: Install Dependencies
@@ -30,14 +30,36 @@ jobs:
     # Step 4: Login to Hugging Face Hub
     - name: Login to Hugging Face Hub
       env:
-        HF_TOKEN: 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
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
       run: |
         huggingface-cli login --token $HF_TOKEN
+
+    # Step 4.1: Verify Secrets (New Step)
+    - name: Verify Secrets
+      env:
+        WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      run: |
+        echo "🔍 Verifying secrets..."
+        if [[ -z "$WANDB_API_KEY" ]]; then
+          echo "❌ Error: WANDB_API_KEY is missing!"
+          exit 1
+        else
+          echo "✅ WANDB_API_KEY is set."
+        fi
+
+        if [[ -z "$HF_TOKEN" ]]; then
+          echo "❌ Error: HF_TOKEN is missing!"
+          exit 1
+        else
+          echo "✅ HF_TOKEN is set."
+        fi
+        echo "🎉 All secrets are configured correctly!"
 
     # Step 5: Set up W&B API Key
     - name: Login to Weights & Biases
       env:
-        WANDB_API_KEY: 176c2e1e992babf02adcaad6346149b30ea69ae3
+        WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
       run: |
         wandb login $WANDB_API_KEY
 
