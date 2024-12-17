@@ -1,0 +1,61 @@
+name: trash_classification
+
+on:
+  push:
+    branches:
+      - main  # Trigger the pipeline when pushing to the main branch
+
+jobs:
+  train-and-publish:
+    runs-on: ubuntu-latest  # Use Ubuntu as the runner
+
+    steps:
+    # Step 1: Checkout Repository
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Python Environment
+    - name: Set Up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.9"  # Use Python 3.9 or as per your requirements
+
+    # Step 3: Install Dependencies
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install wandb huggingface_hub  # For W&B and HuggingFace integrations
+
+    # Step 4: Login to Hugging Face Hub
+    - name: Login to Hugging Face Hub
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      run: |
+        huggingface-cli login --token $HF_TOKEN
+
+    # Step 5: Set up W&B API Key
+    - name: Login to Weights & Biases
+      env:
+        WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+      run: |
+        wandb login $WANDB_API_KEY
+
+    # Step 6: Train the Model
+    - name: Train the Model
+      run: |
+        python train.py  # Ensure train.py contains your training pipeline
+
+    # Step 7: Publish Model to Hugging Face Hub
+    - name: Publish Model to Hugging Face Hub
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      run: |
+        python upload_to_hub.py  # Ensure upload_to_hub.py uploads the model
+
+    # Step 8: Archive Artifacts
+    - name: Archive Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: trained-model
+        path: ./model_output  # Adjust to the path where your model is saved
