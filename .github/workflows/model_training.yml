@@ -3,14 +3,14 @@ name: trash_classification
 on:
   push:
     branches:
-      - main  # Trigger the pipeline when pushing to the main branch
+      - main  
   pull_request:
     branches:
       - main  # Trigger on pull requests to the main branch
 
 jobs:
   train-and-publish:
-    runs-on: ubuntu-latest  # Use Ubuntu as the runner
+    runs-on: ubuntu-latest 
 
     steps:
     # Step 1: Checkout Repository
